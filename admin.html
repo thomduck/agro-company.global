@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thomduck Admin Console</title>
+<style>
+:root{--navy:#071d3b;--navy2:#102d52;--gold:#c99b2c;--gold2:#b8881d;--paper:#f5f6f8;--white:#fff;--ink:#172033;--muted:#788295;--line:#e6e9ef;--green:#198754;--red:#c74343;--shadow:0 12px 30px rgba(10,29,59,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}
+#loginView{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 10%,#193c64 0,transparent 38%),linear-gradient(135deg,#06172d,#0d2b4e)}.login-card{width:min(430px,100%);background:white;border-radius:22px;padding:38px;box-shadow:0 25px 80px #0005}.brand-mark{height:56px;width:56px;border-radius:16px;background:var(--gold);display:grid;place-items:center;color:white;font-size:27px;font-weight:900;margin-bottom:18px}.login-card h1{margin:0;font-size:27px;letter-spacing:-.7px}.login-card p{color:var(--muted);margin:8px 0 27px;line-height:1.5}.field{display:grid;gap:8px;margin:16px 0}.field label{font-size:13px;font-weight:700;color:#354156}.field input,.field select,.field textarea{width:100%;border:1px solid #dce1e8;border-radius:10px;padding:13px 14px;background:#fff;outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px #c99b2c22}.primary{background:var(--gold);color:white;border:0;border-radius:10px;padding:13px 16px;font-weight:800;transition:.2s}.primary:hover{background:var(--gold2);transform:translateY(-1px)}.login-submit{width:100%;margin-top:8px}.login-error{color:var(--red);font-size:13px;min-height:18px;margin-top:10px}.login-foot{border-top:1px solid var(--line);padding-top:17px;margin-top:24px;color:var(--muted);font-size:12px;text-align:center}
+#app{display:none;min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:258px;background:var(--navy);color:#fff;padding:24px 15px;display:flex;flex-direction:column;z-index:5;overflow-y:auto}.brand{display:flex;align-items:center;gap:12px;padding:2px 12px 26px;border-bottom:1px solid #ffffff20}.brand .brand-mark{width:43px;height:43px;border-radius:12px;margin:0;font-size:21px;flex-shrink:0}.brand strong{font-size:17px;letter-spacing:.4px}.brand small{display:block;color:#b6c4d7;font-size:11px;margin-top:3px;letter-spacing:1.4px}.nav-label{font-size:10px;letter-spacing:1.6px;color:#8097b3;font-weight:800;padding:23px 12px 9px}.nav{display:grid;gap:5px}.nav button{display:flex;align-items:center;gap:12px;text-align:left;width:100%;border:0;background:transparent;color:#f6f8fc;padding:12px 13px;border-radius:10px;font-size:13px;font-weight:600;transition:.18s}.nav button .ico{width:20px;text-align:center;font-size:17px;color:#e4bd60}.nav button:hover,.nav button.active{background:#ffffff14}.nav button.active{box-shadow:inset 3px 0 var(--gold);color:#ffdf88}.sidebar-bottom{margin-top:auto;padding:18px 9px 0}.admin-chip{display:flex;align-items:center;gap:10px;padding:12px;background:#ffffff0d;border-radius:12px}.avatar{width:34px;height:34px;border-radius:50%;background:#c99b2c;display:grid;place-items:center;font-weight:900}.admin-chip strong{font-size:12px;display:block}.admin-chip small{font-size:11px;color:#a9b9cd}.logout{width:100%;margin-top:12px!important;color:var(--navy)!important;background:#ffffff!important;font-weight:900!important;border-radius:10px}.logout .ico{color:var(--navy)!important}.main{margin-left:258px;min-height:100vh}.topbar{height:76px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:3}.crumb{font-size:12px;color:var(--muted)}.crumb strong{color:var(--ink)}.top-right{display:flex;align-items:center;gap:13px}.status-pill{font-size:11px;color:#16734a;background:#e6f6ee;padding:7px 10px;border-radius:20px;font-weight:800}.top-avatar{width:36px;height:36px;border-radius:50%;background:var(--navy);color:white;display:grid;place-items:center;font-weight:800}.mobile-menu{display:none;border:0;background:transparent;font-size:24px}.content{padding:30px 32px 45px;max-width:1600px;margin:auto}.welcome{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:27px}.eyebrow{color:var(--gold2);font-size:11px;font-weight:900;letter-spacing:1.8px;text-transform:uppercase}.welcome h1{font-size:clamp(24px,3vw,33px);letter-spacing:-1px;margin:8px 0}.welcome p{color:var(--muted);margin:0;font-size:14px}.date-tag{border:1px solid var(--line);border-radius:10px;background:white;padding:10px 13px;font-size:12px;color:#5c6575;white-space:nowrap}
+.section-title{font-size:16px;font-weight:850;margin:0 0 15px}.action-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-bottom:30px}.action-card{position:relative;overflow:hidden;border:0;border-radius:15px;min-height:132px;padding:20px;background:linear-gradient(135deg,#d1a63f,#b98618);color:white;text-align:left;box-shadow:0 8px 18px #b9861822;transition:transform .2s,box-shadow .2s}.action-card:hover{transform:translateY(-3px);box-shadow:0 13px 24px #b9861838}.action-card:after{content:"";position:absolute;width:100px;height:100px;border:1px solid #ffffff30;border-radius:50%;right:-24px;top:-25px;box-shadow:0 0 0 16px #ffffff0c,0 0 0 32px #ffffff08}.action-icon{height:37px;width:37px;border-radius:11px;background:#ffffff30;display:grid;place-items:center;font-size:19px;margin-bottom:13px}.action-card strong{display:block;font-size:16px;font-weight:900;position:relative;z-index:1}.action-card small{display:block;margin-top:5px;color:#fff8;font-size:12px;position:relative;z-index:1}.section-card{background:white;border:1px solid var(--line);border-radius:16px;padding:23px;box-shadow:var(--shadow);margin-top:18px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.section-head h2{font-size:17px;margin:0}.section-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.outline-btn{border:1px solid var(--line);background:#fff;color:#27334a;border-radius:9px;padding:9px 12px;font-size:12px;font-weight:750}.customer-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;border:1px solid #e6d5a9;background:#fffaf0;padding:15px 16px;border-radius:11px;font-weight:800;color:#27334a;text-align:left}.customer-toggle span:last-child{color:var(--gold2);font-size:18px}.customer-panel{display:none;margin-top:14px}.customer-panel.open{display:block}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;min-width:650px;font-size:12px}th{text-align:left;background:#f7f8fa;color:#697487;padding:13px 14px;font-size:10px;text-transform:uppercase;letter-spacing:.7px}td{padding:14px;border-top:1px solid var(--line)}tbody tr:hover{background:#fcfaf5}.badge{display:inline-block;border-radius:20px;background:#e8f6ed;color:#16764a;font-size:10px;padding:5px 8px;font-weight:800}.search-row{display:flex;gap:10px;margin-bottom:13px}.search-row input{flex:1;min-width:0;border:1px solid var(--line);border-radius:9px;padding:10px 12px}.empty{padding:28px;text-align:center;color:var(--muted);font-size:13px}.toast{position:fixed;right:24px;bottom:24px;z-index:20;background:#102d25;color:white;padding:14px 18px;border-radius:11px;box-shadow:var(--shadow);font-size:13px;max-width:min(390px,calc(100vw - 36px));display:none}.toast.show{display:block;animation:fade .2s}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.modal-backdrop{position:fixed;inset:0;background:#071d3bb0;display:none;place-items:center;padding:20px;z-index:15}.modal-backdrop.show{display:grid}.modal{background:white;width:min(480px,100%);border-radius:17px;padding:25px;box-shadow:0 25px 70px #0004}.modal h2{margin:0 0 6px;font-size:20px}.modal p{font-size:13px;color:var(--muted);margin:0 0 17px}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.danger{background:#b83d3d}.mobile-overlay{display:none}
+@media(max-width:1050px){.sidebar{width:225px}.main{margin-left:225px}.content{padding:25px 22px}.topbar{padding:0 22px}.action-grid{gap:12px}.action-card{padding:16px;min-height:125px}}
+@media(max-width:760px){.sidebar{transform:translateX(-100%);transition:transform .25s;width:270px}.sidebar.open{transform:translateX(0)}.mobile-overlay.show{display:block;position:fixed;inset:0;background:#071d3b80;z-index:4}.main{margin-left:0}.mobile-menu{display:block}.topbar{height:65px;padding:0 16px}.content{padding:22px 15px 32px}.welcome{align-items:flex-start;flex-direction:column}.date-tag{display:none}.action-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.action-card{min-height:125px;padding:15px}.action-card strong{font-size:14px;font-weight:900}.section-card{padding:16px}.status-pill{display:none}}
+@media(max-width:390px){.action-grid{grid-template-columns:1fr}.action-card{min-height:100px}.action-icon{float:left;margin:0 13px 0 0}.action-card strong{padding-top:2px}}
+
+.cnt{background:#e03131;color:#fff;border-radius:999px;min-width:21px;height:21px;padding:0 6px;font-size:11px;font-weight:800;display:inline-grid;place-items:center;margin-left:auto;box-shadow:0 0 0 2px #0003}.cnt[hidden]{display:none}
+.action-card .cnt{position:absolute;top:12px;right:14px;margin:0;z-index:2;font-size:12px;min-width:24px;height:24px;box-shadow:0 0 0 3px #ffffff55}
+.req-list{display:grid;gap:16px}.req{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff}.req-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}.req-head strong{display:block;font-size:14px}.req-head small{color:var(--muted);font-size:12px;word-break:break-all}
+.chip{display:inline-block;border-radius:20px;font-size:10px;font-weight:800;padding:5px 9px;white-space:nowrap}.chip.pend{background:#fff4d6;color:#8a6410}.chip.ok{background:#e8f6ed;color:#16764a}.chip.bad{background:#fde8e8;color:#b83d3d}
+.req-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:12px}.req-grid span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:3px}.req-grid b{font-size:13px;word-break:break-word}
+.rcpt-label{font-size:11px;font-weight:800;color:#697487;text-transform:uppercase;letter-spacing:.6px;margin:4px 0 7px}.rcpt{display:block;width:100%;max-width:420px;max-height:340px;object-fit:contain;border:1px solid var(--line);border-radius:10px;background:#f7f8fa;cursor:zoom-in}.rcpt-none{padding:14px;border:1px dashed #e0b4b4;border-radius:10px;color:var(--red);font-size:12px;font-weight:700}
+.req-actions{display:flex;gap:10px;margin-top:14px}.req-actions button{flex:1;border:0;border-radius:10px;padding:12px;font-weight:800;color:#fff}.btn-approve{background:var(--green)}.btn-decline{background:var(--red)}.req-actions button:disabled{opacity:.55;cursor:wait}
+.mini-copy{border:1px solid var(--line);background:#fff;border-radius:7px;font-size:10px;font-weight:800;padding:3px 7px;margin-left:6px;color:#27334a}
+.sub-title{font-size:12px;font-weight:800;color:#697487;text-transform:uppercase;letter-spacing:.8px;margin:24px 0 10px}
+.viewer{position:fixed;inset:0;background:#000d;z-index:30;display:grid;place-items:center;padding:16px}.viewer[hidden]{display:none}.viewer img{max-width:100%;max-height:100%;border-radius:10px;background:#fff}.viewer button{position:absolute;top:14px;right:16px;border:0;background:#fff;border-radius:50%;width:38px;height:38px;font-size:18px;font-weight:800}
+.status-pill.off{color:#a33;background:#fde8e8}
+</style>
+</head>
+<body>
+<section id="loginView">
+  <form class="login-card" id="loginForm">
+    <div class="brand-mark">T</div>
+    <h1>Thomduck Admin</h1>
+    <p>Secure administrator access to the Thomduck management console.</p>
+    <div class="field"><label for="username">Username</label><input id="username" name="username" autocomplete="username" required></div>
+    <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required></div>
+    <button class="primary login-submit" type="submit">Sign in to dashboard &nbsp; →</button>
+    <div class="login-error" id="loginError" aria-live="polite"></div>
+    <div class="login-foot">THOMDUCK · ADMINISTRATOR CONSOLE</div>
+  </form>
+</section>
+<div id="app">
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">T</div><div><strong>THOMDUCK</strong><small>ADMIN CONSOLE</small></div></div>
+    <div class="nav-label">MAIN MENU</div>
+    <nav class="nav" id="sideNav">
+      <button class="active" data-action="Dashboard"><span class="ico">▦</span>Dashboard</button>
+      <button data-action="Approve payment receipt"><span class="ico">▣</span>Approve payment receipt<span class="cnt" data-cnt="pay" hidden></span></button>
+      <button data-action="Generate gift code"><span class="ico">◇</span>Generate gift code</button>
+      <button data-action="Approve withdrawal request"><span class="ico">↗</span>Approve withdrawal request<span class="cnt" data-cnt="wd" hidden></span></button>
+      <button data-action="Delete a customers account"><span class="ico">♙</span>Delete a customers account</button>
+      <button data-action="Edit company Bank"><span class="ico">▤</span>Edit company Bank</button>
+      <button data-action="Edit company Whatsapp"><span class="ico">◉</span>Edit company Whatsapp</button>
+      <button data-action="Edit Company telegram"><span class="ico">➤</span>Edit Company telegram</button>
+      <button data-action="Edit product price"><span class="ico">＄</span>Edit product price</button>
+      <button data-action="Edit product earns"><span class="ico">↗</span>Edit product earns</button>
+      <button data-action="General announcement"><span class="ico">▤</span>General announcement</button>
+      <button data-action="Settings"><span class="ico">⚙</span>Settings</button>
+    </nav>
+    <div class="sidebar-bottom"><div class="admin-chip"><div class="avatar">T</div><div><strong>Thomduck Admin</strong><small>Administrator</small></div></div><button class="nav logout" id="logoutBtn"><span class="ico">↪</span>Logout</button></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div style="display:flex;align-items:center;gap:13px"><button class="mobile-menu" id="mobileMenu" aria-label="Open menu">☰</button><div class="crumb">Thomduck / <strong id="breadcrumb">Dashboard</strong></div></div><div class="top-right"><span class="status-pill">● Admin session active</span><div class="top-avatar">T</div></div></header>
+    <div class="content">
+      <div class="welcome"><div><div class="eyebrow">Administrator workspace</div><h1 id="pageTitle">Welcome back, Admin</h1><p>Manage customer activity, payment requests and company settings.</p></div><div class="date-tag" id="dateTag">◷ Loading date</div></div>
+      <div class="section-title">Customer overview</div>
+      <div class="action-grid">
+        <button class="action-card" data-action="Customers"><span class="action-icon">♙</span><strong>Customers</strong><small>View customer directory</small></button>
+        <button class="action-card" data-action="Customer online"><span class="action-icon">◉</span><strong>Customer online</strong><small>Online customer overview</small></button>
+        <button class="action-card" data-action="New registration"><span class="action-icon">＋</span><strong>New registration</strong><small>Recently registered accounts</small></button>
+        <button class="action-card" data-action="Payment receipt"><span class="cnt" data-cnt="pay" hidden></span><span class="action-icon">▣</span><strong>Payment receipt</strong><small>Review submitted receipts</small></button>
+        <button class="action-card" data-action="withdrawal Request"><span class="cnt" data-cnt="wd" hidden></span><span class="action-icon">↗</span><strong>Withdrawal Request</strong><small>Review withdrawal requests</small></button>
+        <button class="action-card" data-action="Today's gift claimers"><span class="action-icon">◇</span><strong>Today's gift claimers</strong><small>Review gift-code claims</small></button>
+      </div>
+      <section class="section-card">
+        <div class="section-head"><div><h2>Current List of Thomduck Customers</h2><p>Expand to view customer records.</p></div><span class="badge" id="customerCount">0 customers</span></div>
+        <button class="customer-toggle" id="customerToggle" aria-expanded="false"><span>▤ &nbsp; Customer directory</span><span id="toggleIcon">＋</span></button>
+        <div class="customer-panel" id="customerPanel">
+          <div class="search-row"><input id="customerSearch" type="search" placeholder="Search name or email…" aria-label="Search customers"><button class="outline-btn" id="clearSearch">Clear</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Full name</th><th>Email address</th><th>Sex</th><th>Total amount invested</th><th>Joined</th></tr></thead><tbody id="customerRows"></tbody></table></div>
+          <div class="empty" id="noCustomers" hidden>No customer records are available yet.</div>
+        </div>
+      </section>
+      <section class="section-card" id="activityCard">
+        <div class="section-head"><div><h2 id="activityTitle">Admin quick actions</h2><p id="activityDesc">Choose an action to open its management panel.</p></div><span class="eyebrow">THOMDUCK</span></div>
+        <div class="empty" id="activityBody">Select a button above or from the sidebar to get started.</div>
+      </section>
+    </div>
+  </main>
+</div>
+<div class="modal-backdrop" id="modalBackdrop"><form class="modal" id="actionForm"><h2 id="modalTitle">Action</h2><p id="modalDescription">Enter the details below.</p><div id="modalFields"></div><div class="modal-actions"><button type="button" class="outline-btn" id="cancelModal">Cancel</button><button type="submit" class="primary" id="modalSubmit">Save changes</button></div></form></div>
+<div class="viewer" id="viewer" hidden><button type="button" id="viewerClose" aria-label="Close">✕</button><img id="viewerImg" alt="Payment invoice"></div>
+<div class="toast" id="toast" role="status"></div>
+<script src="app.js"></script>
+<script>
+let CUSTOMERS = [];
+const fmt=n=>"₦"+Number(n).toLocaleString("en-NG");
+const $=id=>document.getElementById(id);
+$("dateTag").textContent="◷ "+new Date().toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
+let adminPassword = "0011456";
+$("loginForm").addEventListener("submit",e=>{e.preventDefault();if($("username").value==="Thomduck147"&&$("password").value===adminPassword){$("loginView").style.display="none";$("app").style.display="block";renderCustomers();startSync();}else{$("loginError").textContent="Unable to sign in. Check your credentials and try again."; $("password").value="";}});
+function renderCustomers(){const q=$("customerSearch").value.toLowerCase();const list=CUSTOMERS.filter(c=>((c.name||"")+" "+(c.email||"")).toLowerCase().includes(q));$("customerRows").innerHTML=list.map(c=>`<tr><td><strong>${esc(c.name)}</strong></td><td>${esc(c.email)}</td><td>${esc(c.sex||"—")}</td><td>${fmt(c.invested)}</td><td>${esc(whenShort(c.createdAt))}</td></tr>`).join("");$("noCustomers").hidden=list.length>0;$("customerCount").textContent=CUSTOMERS.length+(CUSTOMERS.length===1?" customer":" customers");}
+$("customerToggle").addEventListener("click",()=>{const open=$("customerPanel").classList.toggle("open");$("customerToggle").setAttribute("aria-expanded",String(open));$("toggleIcon").textContent=open?"−":"＋";});
+$("customerSearch").addEventListener("input",renderCustomers);$("clearSearch").addEventListener("click",()=>{$("customerSearch").value="";renderCustomers();});
+const actionConfigs={
+"Approve payment receipt":{desc:"Review a payment receipt reference.",fields:[["Receipt reference","text","Enter receipt ID"],["Decision","select",["Approve","Reject"]]]},
+"Generate gift code":{desc:"Enter the amount each customer receives and how many customers can use the code. The code is generated automatically.",fields:[["Amount per customer (₦)","number","e.g. 3000"],["Number of users","number","e.g. 10"]]},
+"Approve withdrawal request":{desc:"Review a customer's withdrawal request.",fields:[["Customer email","email","Enter customer email"],["Decision","select",["Approve","Reject"]],["Admin note","text","Optional note"]]},
+"Delete a customers account":{desc:"Remove a customer. They are signed out on their next sync and cannot use the old account.",fields:[["Customer email","email","Enter customer email"],["Confirmation","select",["Cancel request","Confirm account removal"]]]},
+"Edit company Bank":{desc:"Update the displayed company bank details.",fields:[["Bank name","text","Bank name"],["Account name","text","Account holder"],["Account number","text","Account number"]]},
+"Edit company Whatsapp":{desc:"Update the WhatsApp contact shown to customers.",fields:[["WhatsApp contact","text","+234…"]]},
+"Edit Company telegram":{desc:"Update the Telegram contact shown to customers.",fields:[["Telegram username or link","text","@username"]]},
+"Edit product price":{desc:"Set the price customers pay for a product. It updates on the customer product page.",fields:[["Product name","select",["Silver Egg","Golden Duckling","Diamond Drake","Rubies Duck"]],["Price (₦)","number","e.g. 10500"]]},
+"Edit product earns":{desc:"Set the profit credited to the customer when you approve their payment.",fields:[["Product name","select",["Silver Egg","Golden Duckling","Diamond Drake","Rubies Duck"]],["Earnings amount (₦)","number","e.g. 90000"]]},
+"General announcement":{desc:"Compose an announcement for customers.",fields:[["Announcement title","text","Title"],["Message","textarea","Write your announcement"]]},
+"Settings":{desc:"Change the administrator password.",fields:[["Current password","password","Enter current password"],["New password","password","Enter new password"],["Confirm new password","password","Confirm new password"]]}
+};
+function showToast(msg){$("toast").textContent=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),3400)}
+function showActivity(title,desc,body,noScroll){$("activityTitle").textContent=title;$("activityDesc").textContent=desc;$("activityBody").innerHTML=body;if(!noScroll)$("activityCard").scrollIntoView({behavior:"smooth",block:"nearest"});}
+function openAction(action){$("sidebar").classList.remove("open");$("mobileOverlay").classList.remove("show");activePanel=null;
+if(action==="Payment receipt"||action==="Approve payment receipt"){showPayments();return;}
+if(action==="withdrawal Request"||action==="Approve withdrawal request"){showWithdrawals();return;}
+if(action==="New registration"){showNewRegistrations();return;}
+if(["Customers","Customer online","New registration"].includes(action)){ $("customerPanel").classList.add("open");$("customerToggle").setAttribute("aria-expanded","true");$("toggleIcon").textContent="−";let desc=action==="Customer online"?"Customer online status.":action==="New registration"?"View recent registrations.":"Customer directory and investment totals.";showActivity(action,desc,`<div class="empty">${action==="Customer online"?"Online status will appear here when connected.":action==="New registration"?"Recent registrations will appear in the customer directory above.":"Expand the customer directory above to view customer records."}</div>`);return;}
+if(action==="Today's gift claimers"){showClaimers();return;}
+if(action==="Customer online"){showOnline();return;}
+if(action==="Dashboard"){showActivity("Admin quick actions","Choose an action to open its management panel.",'<div class="empty">Select a button above or from the sidebar to get started.</div>');$("pageTitle").textContent="Welcome back, Admin";$("breadcrumb").textContent="Dashboard";return;}
+const cfg=actionConfigs[action];if(!cfg){showToast(action+" selected");return;}
+$("modalTitle").textContent=action;$("modalDescription").textContent=cfg.desc;
+$("modalFields").innerHTML=cfg.fields.map((f,i)=>{let id="field"+i;if(f[1]==="select")return `<div class="field"><label for="${id}">${f[0]}</label><select id="${id}" name="${f[0]}">${f[2].map(v=>`<option>${v}</option>`).join("")}</select></div>`;if(f[1]==="textarea")return `<div class="field"><label for="${id}">${f[0]}</label><textarea id="${id}" name="${f[0]}" rows="4" placeholder="${f[2]}" required></textarea></div>`;return `<div class="field"><label for="${id}">${f[0]}</label><input id="${id}" name="${f[0]}" type="${f[1]}" placeholder="${f[2]}" ${f[1]==="number"?'min="0" step="any"':""} required></div>`}).join("");
+$("modalSubmit").textContent=action==="Generate gift code"?"Generate code":"Save changes";if(action==="Generate gift code"){showGiftCodes(true);}
+$("modalBackdrop").classList.add("show");if(action==="Edit company Bank"){const st=DATA.settings||{};const f=$("modalFields").querySelectorAll("input");if(f.length===3){f[0].value=st.bankName||"";f[1].value=st.accountName||"";f[2].value=st.bankAccount||"";}}}
+document.querySelectorAll("[data-action]").forEach(b=>b.addEventListener("click",()=>{const a=b.dataset.action;document.querySelectorAll("#sideNav button").forEach(n=>n.classList.toggle("active",n.dataset.action===a));$("pageTitle").textContent=a==="Dashboard"?"Welcome back, Admin":a;$("breadcrumb").textContent=a;openAction(a)}));
+$("cancelModal").addEventListener("click",()=>$("modalBackdrop").classList.remove("show"));
+$("modalBackdrop").addEventListener("click",e=>{if(e.target===$("modalBackdrop"))$("modalBackdrop").classList.remove("show")});
+$("actionForm").addEventListener("submit",e=>{e.preventDefault();const title=$("modalTitle").textContent;const fields=[...$("modalFields").querySelectorAll("input,select,textarea")];if(title==="Settings"){const current=fields[0].value;const next=fields[1].value;const confirm=fields[2].value;if(current!==adminPassword){showToast("Current password is incorrect.");return;}if(next.length<8){showToast("New password must be at least 8 characters.");return;}if(next!==confirm){showToast("New passwords do not match.");return;}adminPassword=next;$("modalBackdrop").classList.remove("show");showActivity("Change password","Password changed.",'<div class="empty">Your password has been changed for this session. A secure server connection is required to save it permanently.</div>');showToast("Password changed for this session.");return;}if(title==="Generate gift code"){generateGift(fields.map(f=>f.value));return;}if(title==="Edit company Bank"){saveBank(fields.map(f=>f.value.trim()));return;}if(["Edit company Whatsapp","Edit Company telegram","Edit product price","Edit product earns","General announcement","Delete a customers account"].includes(title)){saveAction(title,fields.map(f=>f.value.trim()));return;}const values=fields.map(el=>el.previousElementSibling.textContent+": "+el.value);$("modalBackdrop").classList.remove("show");showActivity(title,"Action details prepared.",`<div style="background:#fffaf0;border:1px solid #ead7a4;border-radius:11px;padding:16px"><strong style="color:#896414">Request details</strong><p style="font-size:12px;color:#6d7481;margin:8px 0">These details are ready for processing when the management system is connected.</p><ul style="font-size:12px;line-height:1.9">${values.map(v=>`<li>${v.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</li>`).join("")}</ul></div>`);showToast("Request details prepared.");});
+$("logoutBtn").addEventListener("click",()=>{ stopSync();$("app").style.display="none";$("loginView").style.display="grid";$("loginForm").reset();$("loginError").textContent="";$("pageTitle").textContent="Welcome back, Admin";});
+$("mobileMenu").addEventListener("click",()=>{$("sidebar").classList.add("open");$("mobileOverlay").classList.add("show")});$("mobileOverlay").addEventListener("click",()=>{$("sidebar").classList.remove("open");$("mobileOverlay").classList.remove("show")});
+
+/* ================= LIVE DATA, REQUESTS, APPROVALS ================= */
+const arr=x=>Array.isArray(x)?x:(x&&typeof x==="object"?Object.values(x):[]);
+const esc=t=>String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const when=ts=>ts?new Date(ts).toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}):"—";
+const whenShort=ts=>ts?new Date(ts).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):"—";
+let DATA={customers:[],payments:[],withdrawals:[],referrals:[],giftCodes:[],settings:{}};
+let activePanel=null,lastSig="",pollT=null,lastLoadAt=0;
+
+function setOnline(ok){const p=document.querySelector(".status-pill");if(!p)return;p.textContent=ok?"● Admin active · tap to refresh":"● Offline · tap to retry";p.classList.toggle("off",!ok);p.style.cursor="pointer";p.onclick=()=>refreshAll(true).then(()=>showToast("Refreshed."));}
+async function loadData(){
+  try{const d=await window._fetchBin();DATA=Object.assign({},d,{customers:arr(d.customers),payments:arr(d.payments),withdrawals:arr(d.withdrawals),referrals:arr(d.referrals),giftCodes:arr(d.giftCodes),settings:d.settings||{}});lastLoadAt=Date.now();setOnline(true);return true;}
+  catch(e){setOnline(false);return false;}
+}
+function buildCustomers(){
+  CUSTOMERS=DATA.customers.map(c=>({...c,invested:DATA.payments.filter(p=>p.userEmail===c.email&&p.status==="approved").reduce((t,p)=>t+(Number(p.amount)||0),0)})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+}
+function paintCounts(){
+  const n={pay:DATA.payments.filter(p=>p.status==="pending").length,wd:DATA.withdrawals.filter(w=>w.status==="pending").length};
+  document.querySelectorAll("[data-cnt]").forEach(el=>{const v=n[el.dataset.cnt]||0;el.textContent=v>99?"99+":v;el.hidden=!v;});
+  document.title=(n.pay+n.wd?"("+(n.pay+n.wd)+") ":"")+"Thomduck Admin Console";
+}
+const sig=()=>DATA.payments.map(p=>p.id+p.status).join()+"|"+DATA.withdrawals.map(w=>w.id+w.status).join()+"|"+DATA.customers.length+"|"+DATA.giftCodes.map(g=>g.code+arr(g.claims).length+g.maxUsers+g.amount+(g.disabled?1:0)).join()+"|"+Math.floor(Date.now()/60000);
+async function refreshAll(force){
+  const ok=await loadData();if(!ok)return;
+  buildCustomers();paintCounts();renderCustomers();checkAlerts();sizeWarning();
+  const sg=sig();if(!force&&sg===lastSig)return;lastSig=sg;
+  if(activePanel==="pay")showPayments(true);else if(activePanel==="wd")showWithdrawals(true);else if(activePanel==="new")showNewRegistrations(true);else if(activePanel==="gift")showGiftCodes(true);else if(activePanel==="claims")showClaimers(true);else if(activePanel==="online")showOnline(true);
+}
+function startSync(){stopSync();localWarning();try{if("Notification" in window&&Notification.permission==="default")Notification.requestPermission()}catch(e){}refreshAll(true);pollT=setInterval(()=>{if(!document.hidden)refreshAll(false)},((window.THOMDUCK_CONFIG.pollAdmin||120)*1000));}
+function stopSync(){clearInterval(pollT);}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&pollT&&Date.now()-lastLoadAt>120000)refreshAll(false)});
+
+const safeImg=u=>typeof u==="string"&&/^data:image\/(jpeg|png|webp|gif);base64,/.test(u)?u:"";
+const chip=st=>st==="approved"?'<span class="chip ok">Approved</span>':st==="declined"?'<span class="chip bad">Declined</span>':'<span class="chip pend">Pending</span>';
+
+const RCPT={};   /* receipt photos loaded on demand (each lives in its own JSONBin bin) */
+async function loadReceipt(id,btn){
+  const p=DATA.payments.find(x=>x.id===id);if(!p||!p.receiptBin)return;
+  btn.disabled=true;btn.textContent="Loading…";
+  try{RCPT[id]=await window._getReceipt(p.receiptBin);}catch(e){showToast("Could not load the receipt. Try again.");btn.disabled=false;btn.textContent="Load receipt";return;}
+  refreshAll(true);
+}
+function payCard(p,history){
+  const img=safeImg(p.receipt||RCPT[p.id]);
+  return `<div class="req"><div class="req-head"><div><strong>${esc(p.userName||p.userEmail)}</strong><small>${esc(p.userEmail)}</small></div>${chip(p.status)}</div>
+  <div class="req-grid"><div><span>Product</span><b>${esc(p.productName)}</b></div><div><span>Amount paid</span><b>${fmt(p.amount)}</b></div><div><span>Earning to credit</span><b>${fmt(p.profit)}</b></div><div><span>Reference</span><b>${esc(p.id)}</b></div><div><span>Submitted</span><b>${esc(when(p.createdAt))}</b></div>${history?`<div><span>Decided</span><b>${esc(when(p.decidedAt))}</b></div>`:""}</div>
+  <div class="rcpt-label">Invoice / payment receipt</div>${img?`<img class="rcpt" src="${img}" data-zoom alt="Payment invoice"><a class="mini-copy" style="display:inline-block;margin:8px 0 0;text-decoration:none" href="${img}" download="receipt-${esc(p.id)}.jpg">Download receipt</a>`:(p.receiptBin?`<button type="button" class="btn-approve" style="padding:12px 18px;border:0;border-radius:10px;color:#fff;font-weight:800" data-rcpt="${esc(p.id)}">▣ Load receipt</button>`:'<div class="rcpt-none">No receipt image attached</div>')}
+  ${history?"":`<div class="req-actions"><button type="button" class="btn-approve" data-kind="pay" data-do="approve" data-id="${esc(p.id)}">✓ Approve</button><button type="button" class="btn-decline" data-kind="pay" data-do="decline" data-id="${esc(p.id)}">✕ Decline</button></div>`}</div>`;
+}
+function showPayments(quiet){
+  const pend=DATA.payments.filter(p=>p.status==="pending").sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+  const done=DATA.payments.filter(p=>p.status!=="pending").sort((a,b)=>(b.decidedAt||0)-(a.decidedAt||0)).slice(0,15);
+  const body=(pend.length?`<div class="req-list">${pend.map(p=>payCard(p)).join("")}</div>`:'<div class="empty">No payment receipts are waiting for approval.</div>')+(done.length?`<div class="sub-title">Recently decided</div><div class="req-list">${done.map(p=>payCard(p,true)).join("")}</div>`:"");
+  const y=window.scrollY;showActivity("Payment receipts",pend.length+" waiting for approval. Check each invoice carefully before approving.",body,quiet);activePanel="pay"; 
+}
+function hasBought(email){return DATA.payments.some(p=>p.userEmail===email&&p.status==="approved");}
+function wdCard(w,history){
+  const b=w.bank||{};
+  return `<div class="req"><div class="req-head"><div><strong>${esc(w.userName||w.userEmail)}</strong><small>${esc(w.userEmail)}</small></div>${chip(w.status)}</div>
+  <div class="req-grid"><div><span>Amount</span><b>${fmt(w.amount)}</b></div><div><span>Bank</span><b>${esc(b.bank||"—")}</b></div><div><span>Account number</span><b>${esc(b.number||"—")}</b>${b.number?`<button type="button" class="mini-copy" data-copy="${esc(b.number)}">Copy</button>`:""}</div><div><span>Account name</span><b>${esc(b.name||"—")}</b></div><div><span>Reference</span><b>${esc(w.id)}</b></div><div><span>Requested</span><b>${esc(when(w.createdAt))}</b></div>${history?`<div><span>Decided</span><b>${esc(when(w.decidedAt))}</b></div>`:""}</div>
+  ${(!history&&!hasBought(w.userEmail))?'<div class="rcpt-none" style="color:#c74343;font-weight:800">⚠ No approved product purchase for this customer. They should not be eligible to withdraw.</div>':""}
+  ${history?"":`<div class="req-actions"><button type="button" class="btn-approve" data-kind="wd" data-do="approve" data-id="${esc(w.id)}">✓ Approve (paid)</button><button type="button" class="btn-decline" data-kind="wd" data-do="decline" data-id="${esc(w.id)}">✕ Decline</button></div>`}</div>`;
+}
+function showWithdrawals(quiet){
+  const pend=DATA.withdrawals.filter(w=>w.status==="pending").sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+  const done=DATA.withdrawals.filter(w=>w.status!=="pending").sort((a,b)=>(b.decidedAt||0)-(a.decidedAt||0)).slice(0,15);
+  const body=(pend.length?`<div class="req-list">${pend.map(w=>wdCard(w)).join("")}</div>`:'<div class="empty">No withdrawal requests are waiting.</div>')+(done.length?`<div class="sub-title">Recently decided</div><div class="req-list">${done.map(w=>wdCard(w,true)).join("")}</div>`:"");
+  const y=window.scrollY;showActivity("Withdrawal requests",pend.length+" waiting. Pay the customer through your Flutterwave agent, then tap Approve.",body,quiet);activePanel="wd"; 
+}
+function showNewRegistrations(quiet){
+  const cut=Date.now()-7*864e5,list=CUSTOMERS.filter(c=>(c.createdAt||0)>=cut);
+  const body=list.length?`<div class="table-wrap"><table><thead><tr><th>Full name</th><th>Email address</th><th>Sex</th><th>Joined</th></tr></thead><tbody>${list.map(c=>`<tr><td><strong>${esc(c.name)}</strong></td><td>${esc(c.email)}</td><td>${esc(c.sex||"—")}</td><td>${esc(when(c.createdAt))}</td></tr>`).join("")}</tbody></table></div>`:'<div class="empty">No new registrations in the last 7 days.</div>';
+  const y=window.scrollY;showActivity("New registration",list.length+" new "+(list.length===1?"account":"accounts")+" in the last 7 days.",body,quiet);activePanel="new";
+  $("customerPanel").classList.add("open");$("customerToggle").setAttribute("aria-expanded","true");$("toggleIcon").textContent="−"; 
+}
+
+async function decide(kind,id,decision,btn){
+  const list=kind==="pay"?"payments":"withdrawals",item=DATA[list].find(x=>x.id===id);if(!item)return;
+  const who=item.userName||item.userEmail;
+  const msg=kind==="pay"
+    ?(decision==="approve"?`Approve this payment from ${who}?\n\n${fmt(item.profit)} will be added to their balance automatically.`:`Decline this payment from ${who}?\n\nNo earnings will be added and the customer will be told the receipt was declined.`)
+    :(decision==="approve"?`Approve withdrawal of ${fmt(item.amount)} for ${who}?\n\nOnly approve after you have paid them. It will clear from their pending balance.`:`Decline withdrawal of ${fmt(item.amount)} for ${who}?\n\nThe money will be returned to their available balance.`);
+  if(kind==="pay"&&decision==="approve"&&item.receiptBin&&!RCPT[item.id]&&!item.receipt&&!confirm("You have not opened this receipt yet. Approve anyway?"))return;
+  if(kind==="wd"&&decision==="approve"&&!hasBought(item.userEmail)&&!confirm("This customer has no approved product purchase and should not be eligible to withdraw. Approve anyway?"))return;
+  if(!confirm(msg))return;
+  const card=btn.closest(".req");card&&card.querySelectorAll("button").forEach(b=>b.disabled=true);
+  try{
+    let done=false;
+    await window._updateBin(d=>{d[list]=arr(d[list]);const t=d[list].find(x=>x.id===id);if(t&&t.status==="pending"){t.status=decision==="approve"?"approved":"declined";t.decidedAt=Date.now();done=true;}return d;});
+    showToast(done?(decision==="approve"?"Approved. The customer's account updates automatically.":"Declined. The customer will be notified."):"This request was already handled.");
+  }catch(e){showToast("Could not save. Check your connection and try again.");card&&card.querySelectorAll("button").forEach(b=>b.disabled=false);return;}
+  await refreshAll(true);
+}
+async function saveBank(v){
+  if(!v[0]||!v[1]||!v[2]){showToast("Fill in all three fields.");return;}
+  try{await window._updateBin(d=>{d.settings=Object.assign({},d.settings||{},{bankName:v[0],accountName:v[1],bankAccount:v[2]});return d;});}
+  catch(e){showToast("Could not save. Check your connection and try again.");return;}
+  $("modalBackdrop").classList.remove("show");DATA.settings=Object.assign({},DATA.settings,{bankName:v[0],accountName:v[1],bankAccount:v[2]});
+  showActivity("Edit company Bank","Saved.",`<div style="background:#f1faf5;border:1px solid #bfe3cf;border-radius:11px;padding:16px;font-size:13px;line-height:1.8"><strong style="color:#16734a">Customers will now pay to:</strong><br>${esc(v[0])}<br>${esc(v[1])}<br>${esc(v[2])}</div>`);showToast("Company bank details updated.");
+}
+
+
+/* ================= EXTRA ADMIN ACTIONS (all saved to the shared data) ================= */
+const PROD_IDS={"Silver Egg":"silver","Golden Duckling":"golden","Diamond Drake":"diamond","Rubies Duck":"rubies"};
+function doneBox(t,html){return `<div style="background:#f1faf5;border:1px solid #bfe3cf;border-radius:11px;padding:16px;font-size:13px;line-height:1.8"><strong style="color:#16734a">${esc(t)}</strong><br>${html}</div>`}
+async function saveAction(title,v){
+  const closeM=()=>$("modalBackdrop").classList.remove("show");
+  try{
+    if(title==="Edit company Whatsapp"){
+      const n=(v[0]||"").replace(/\D/g,"");if(n.length<7){showToast("Enter a valid WhatsApp number with country code.");return;}
+      await window._updateBin(d=>{d.settings=Object.assign({},d.settings||{},{whatsapp:n});return d});
+      closeM();showActivity(title,"Saved.",doneBox("Customers' Support button now opens:","wa.me/"+esc(n)));showToast("WhatsApp updated.");
+    }else if(title==="Edit Company telegram"){
+      const t=v[0];if(t.length<3){showToast("Enter a Telegram username or link.");return;}
+      await window._updateBin(d=>{d.settings=Object.assign({},d.settings||{},{telegram:t});return d});
+      closeM();showActivity(title,"Saved.",doneBox("Customers' Channel button now opens:",esc(t)));showToast("Telegram updated.");
+    }else if(title==="Edit product price"||title==="Edit product earns"){
+      const id=PROD_IDS[v[0]],val=Math.round(parseFloat(v[1])*100)/100;
+      if(!id||!(val>0)){showToast("Choose a product and enter an amount above 0.");return;}
+      const key=title==="Edit product price"?"price":"profit";
+      await window._updateBin(d=>{d.settings=d.settings||{};d.settings.products=Object.assign({},d.settings.products||{});d.settings.products[id]=Object.assign({},d.settings.products[id]||{},{[key]:val});return d});
+      closeM();showActivity(title,"Saved.",doneBox(v[0]+" "+(key==="price"?"price":"earnings")+" is now",fmt(val)+"<br><small>Payments already submitted keep the amount shown when they were made.</small>"));showToast("Product updated.");
+    }else if(title==="General announcement"){
+      if(!v[0]||!v[1]){showToast("Add a title and a message.");return;}
+      const a={id:"A"+Date.now().toString(36),title:v[0],message:v[1],ts:Date.now()};
+      await window._updateBin(d=>{d.settings=Object.assign({},d.settings||{},{announcement:a});return d});
+      closeM();showActivity(title,"Published.",doneBox("Sent to every customer's notification bell:",esc(v[0])));showToast("Announcement published.");
+    }else if(title==="Delete a customers account"){
+      const email=(v[0]||"").toLowerCase();
+      if(v[1]!=="Confirm account removal"){closeM();showToast("No account was removed.");return;}
+      if(!DATA.customers.some(c=>String(c.email).toLowerCase()===email)){showToast("No customer with that email.");return;}
+      if(!confirm("Permanently remove "+email+"? This cannot be undone."))return;
+      await window._updateBin(d=>{d.customers=arr(d.customers).filter(c=>String(c.email).toLowerCase()!==email);d.deleted=arr(d.deleted);if(!d.deleted.some(x=>x.email===email))d.deleted.push({email,ts:Date.now()});return d});
+      closeM();showActivity(title,"Removed.",doneBox("Account removed:",esc(email)));showToast("Account removed.");
+    }
+  }catch(e){showToast("Could not save. Check your connection and try again.");return;}
+  await refreshAll(true);
+}
+
+/* gift code controls: raise the amount, raise the number of customers, switch on/off */
+async function giftEdit(code,what){
+  const g=DATA.giftCodes.find(x=>x.code===code);if(!g)return;
+  let patch=null;
+  if(what==="users"){
+    const r=prompt("Number of customers allowed to use "+code+" (now "+g.maxUsers+", already used "+usedOf(g)+"):",g.maxUsers);if(r===null)return;
+    const n=parseInt(r,10);if(!(n>=Math.max(1,usedOf(g)))||n>100000){showToast("Enter a number of at least "+Math.max(1,usedOf(g))+".");return;}
+    patch={maxUsers:n};
+  }else if(what==="amount"){
+    const r=prompt("New amount per customer for "+code+" (now ₦"+g.amount+"). Customers who already claimed keep what they received:",g.amount);if(r===null)return;
+    const n=Math.round(parseFloat(r)*100)/100;if(!(n>0)){showToast("Enter an amount above 0.");return;}
+    patch={amount:n};
+  }else if(what==="toggle"){patch={disabled:!g.disabled};}
+  try{await window._updateBin(d=>{const t=arr(d.giftCodes).find(x=>x.code===code);if(t)Object.assign(t,patch);return d});}
+  catch(e){showToast("Could not save. Check your connection and try again.");return;}
+  showToast("Gift code updated.");await refreshAll(true);
+}
+
+/* customers online (seen in the last 3 minutes) */
+function showOnline(quiet){
+  const hb=((window.THOMDUCK_CONFIG||{}).heartbeatSeconds||0)>0,span=hb?3*60000:24*3600000;
+  const cut=Date.now()-span,on=CUSTOMERS.filter(c=>Math.max(c.lastSeen||0,c.lastLogin||0)>=cut);
+  const body=on.length?`<div class="table-wrap"><table><thead><tr><th>Full name</th><th>Email address</th><th>Last seen</th></tr></thead><tbody>${on.map(c=>`<tr><td><strong>${esc(c.name)}</strong></td><td>${esc(c.email)}</td><td>${esc(when(Math.max(c.lastSeen||0,c.lastLogin||0)))}</td></tr>`).join("")}</tbody></table></div>`:'<div class="empty">Nobody is online right now.</div>';
+  showActivity("Customer online",on.length+(hb?" online now (active in the last 3 minutes).":" signed in during the last 24 hours (live online status is off to save JSONBin requests)."),body,quiet);activePanel="online";
+}
+
+/* alerts: sound + toast + browser notification when something new needs attention */
+let lastCounts=null;
+function beep(){try{const A=window.AudioContext||window.webkitAudioContext,c=new A(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.15;o.start();o.stop(c.currentTime+.25)}catch(e){}}
+function checkAlerts(){
+  const start=new Date();start.setHours(0,0,0,0);
+  const cur={pay:DATA.payments.filter(p=>p.status==="pending").length,wd:DATA.withdrawals.filter(w=>w.status==="pending").length,reg:DATA.customers.length,gift:DATA.giftCodes.reduce((t,g)=>t+arr(g.claims).length,0)};
+  if(lastCounts){
+    const msg=[];
+    if(cur.pay>lastCounts.pay)msg.push((cur.pay-lastCounts.pay)+" new payment receipt"+(cur.pay-lastCounts.pay>1?"s":""));
+    if(cur.wd>lastCounts.wd)msg.push((cur.wd-lastCounts.wd)+" new withdrawal request"+(cur.wd-lastCounts.wd>1?"s":""));
+    if(cur.reg>lastCounts.reg)msg.push((cur.reg-lastCounts.reg)+" new registration"+(cur.reg-lastCounts.reg>1?"s":""));
+    if(cur.gift>lastCounts.gift)msg.push((cur.gift-lastCounts.gift)+" new gift claim"+(cur.gift-lastCounts.gift>1?"s":""));
+    if(msg.length){beep();showToast("🔔 "+msg.join(" · "));try{if("Notification" in window&&Notification.permission==="granted"&&document.hidden)new Notification("Thomduck Admin",{body:msg.join(" · ")})}catch(e){}}
+  }
+  lastCounts=cur;
+}
+function banner(id,text,bg){
+  let b=document.getElementById(id);
+  if(!b){b=document.createElement("div");b.id=id;b.style.cssText="color:#fff;padding:12px 18px;font-size:13px;font-weight:700;text-align:center;position:sticky;top:0;z-index:50";document.body.prepend(b);}
+  b.style.background=bg;b.textContent=text;b.hidden=!text;
+}
+function localWarning(){
+  const C=window.THOMDUCK_CONFIG||{};
+  if(C.provider==="local")banner("localWarn","⚠ NOT CONNECTED: app.js is set to 'local', so customers' phones cannot reach this admin. Set provider to 'jsonbin' and add your Bin ID and key (see README).","#c74343");
+  else if(C.provider==="jsonbin"&&(!C.binId||!C.binKey))banner("localWarn","⚠ NOT CONNECTED: binId / binKey are empty in app.js (see README step 3).","#c74343");
+}
+function sizeWarning(){
+  const C=window.THOMDUCK_CONFIG||{};if(C.provider!=="jsonbin")return;
+  const max=C.maxBytes||95000,used=JSON.stringify(DATA).length,pct=Math.round(used/max*100);
+  banner("sizeWarn",pct>=70?"⚠ Database "+pct+"% full ("+Math.round(used/1000)+" KB of "+Math.round(max/1000)+" KB). When it fills, new sign-ups and receipts will fail. Use a new bin or upgrade JSONBin.":"",pct>=90?"#c74343":"#c98a1c");
+}
+
+/* ================= GIFT CODES ================= */
+const usedOf=g=>arr(g.claims).length;
+function giftRow(g){
+  const used=usedOf(g),max=Number(g.maxUsers)||0,left=Math.max(0,max-used),expired=used>=max;
+  return `<tr><td><strong style="letter-spacing:1px">${esc(g.code)}</strong><button type="button" class="mini-copy" data-copy="${esc(g.code)}">Copy</button></td><td>${fmt(g.amount)}</td><td>${used} / ${max}</td><td>${g.disabled?'<span class="chip bad">Disabled</span>':expired?'<span class="chip bad">Expired</span>':'<span class="chip ok">Active · '+left+' left</span>'}</td><td>${esc(whenShort(g.createdAt))}</td><td style="white-space:nowrap"><button type="button" class="mini-copy" data-gift="users" data-code="${esc(g.code)}">Users</button><button type="button" class="mini-copy" data-gift="amount" data-code="${esc(g.code)}">Amount</button><button type="button" class="mini-copy" data-gift="toggle" data-code="${esc(g.code)}">${g.disabled?"Enable":"Disable"}</button></td></tr>`;
+}
+function giftTable(){
+  const l=[...DATA.giftCodes].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  return l.length?`<div class="table-wrap"><table><thead><tr><th>Code</th><th>Amount each</th><th>Used</th><th>Status</th><th>Created</th><th>Manage</th></tr></thead><tbody>${l.map(giftRow).join("")}</tbody></table></div>`:'<div class="empty">No gift codes yet. Use “Generate gift code” to create one.</div>';
+}
+function showGiftCodes(noScroll,banner){
+  showActivity("Gift codes","Each code works for the number of customers you set. A customer can only use a code once.",(banner||"")+giftTable(),noScroll);activePanel="gift";
+}
+function newCode(){
+  const cs="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",r=new Uint32Array(6);crypto.getRandomValues(r);
+  return "GIFT-"+[...r].map(n=>cs[n%cs.length]).join("");
+}
+async function generateGift(v){
+  const amount=Math.round(parseFloat(v[0])*100)/100,users=parseInt(v[1],10);
+  if(!(amount>0)){showToast("Enter the amount each customer will receive.");return;}
+  if(!(users>=1)||users>100000){showToast("Enter a valid number of users (at least 1).");return;}
+  let code="";
+  try{
+    await window._updateBin(d=>{
+      d.giftCodes=arr(d.giftCodes);
+      do{code=newCode()}while(d.giftCodes.some(g=>g.code===code));
+      d.giftCodes.push({code,amount,maxUsers:users,claims:[],createdAt:Date.now()});return d;
+    });
+  }catch(e){showToast("Could not save the code. Check your connection and try again.");return;}
+  $("modalBackdrop").classList.remove("show");
+  await loadData();
+  const banner=`<div style="background:#f1faf5;border:1px solid #bfe3cf;border-radius:14px;padding:20px;text-align:center;margin-bottom:18px"><div style="font-size:12px;color:#16734a;font-weight:800;letter-spacing:.8px;text-transform:uppercase">New gift code</div><div style="font-size:30px;font-weight:900;letter-spacing:3px;margin:10px 0;color:#071d3b">${esc(code)}</div><div style="font-size:13px;color:#4b5565;line-height:1.6">${fmt(amount)} each · valid for the first ${users} customer${users>1?"s":""} · one use per customer</div><button type="button" class="mini-copy" data-copy="${esc(code)}" style="margin-top:12px;font-size:12px;padding:8px 14px">Copy code</button></div>`;
+  showGiftCodes(false,banner);showToast("Gift code generated.");
+}
+function showClaimers(quiet){
+  const start=new Date();start.setHours(0,0,0,0);
+  const rows=[];DATA.giftCodes.forEach(g=>arr(g.claims).forEach(c=>{if((c.ts||0)>=start.getTime())rows.push({g,c})}));
+  rows.sort((a,b)=>b.c.ts-a.c.ts);
+  const body=rows.length?`<div class="table-wrap"><table><thead><tr><th>Customer</th><th>Email</th><th>Code</th><th>Amount</th><th>Time</th></tr></thead><tbody>${rows.map(({g,c})=>`<tr><td><strong>${esc(c.name||"—")}</strong></td><td>${esc(c.email)}</td><td>${esc(g.code)}</td><td>${fmt(g.amount)}</td><td>${esc(when(c.ts))}</td></tr>`).join("")}</tbody></table></div>`:'<div class="empty">Nobody has claimed a gift code today.</div>';
+  showActivity("Today's gift claimers",rows.length+" claim"+(rows.length===1?"":"s")+" today.",body,quiet);activePanel="claims";
+}
+$("activityBody").addEventListener("click",e=>{
+  const rb=e.target.closest("button[data-rcpt]");if(rb){loadReceipt(rb.dataset.rcpt,rb);return;}
+  const gb=e.target.closest("button[data-gift]");if(gb){giftEdit(gb.dataset.code,gb.dataset.gift);return;}
+  const b=e.target.closest("button[data-do]");if(b){decide(b.dataset.kind,b.dataset.id,b.dataset.do,b);return;}
+  const c=e.target.closest("button[data-copy]");if(c){const t=c.dataset.copy;const ok=()=>{c.textContent="Copied";setTimeout(()=>c.textContent="Copy",1500)};if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(ok);else{const x=document.createElement("textarea");x.value=t;document.body.appendChild(x);x.select();try{document.execCommand("copy");ok()}catch(_){}x.remove();}return;}
+  const z=e.target.closest("img[data-zoom]");if(z){$("viewerImg").src=z.src;$("viewer").hidden=false;}
+});
+$("viewer").addEventListener("click",e=>{if(e.target.id!=="viewerImg")$("viewer").hidden=true;});
+
+/* ================= AUTO SIGN-OUT WHEN INACTIVE ================= */
+(function(){
+  const secs=(window.THOMDUCK_CONFIG||{}).idleAdminSeconds||48;
+  let last=Date.now();
+  const bump=()=>{last=Date.now()};
+  ["click","keydown","mousemove","touchstart","touchmove","scroll","wheel","input"].forEach(ev=>window.addEventListener(ev,bump,{passive:true,capture:true}));
+  function check(){
+    if($("app").style.display!=="block")return;
+    if(Date.now()-last<secs*1000)return;
+    $("modalBackdrop").classList.remove("show");$("viewer").hidden=true;$("viewerImg").removeAttribute("src");
+    for(const k in RCPT)delete RCPT[k];
+    $("activityBody").innerHTML='<div class="empty">Select a button above or from the sidebar to get started.</div>';
+    $("logoutBtn").click();
+    $("loginError").textContent="Signed out after "+secs+" seconds of inactivity. Please sign in again.";
+  }
+  setInterval(check,1000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)check()});
+  $("loginForm").addEventListener("submit",bump);
+})();
+
+</script>
+</body>
+</html>
